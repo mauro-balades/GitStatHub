@@ -7,6 +7,7 @@ import { useEffect } from "react";
 
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import RepoInput from "@/components/repo-input";
 
 export default function IndexPage() {
   useEffect(() => {
@@ -21,6 +22,7 @@ export default function IndexPage() {
       <p data-aos="fade-up" data-aos-delay="400" className="mt-2 max-w-[700px] text-lg text-center text-muted-foreground">
         Find statistics about your repositories on GitHub in just a few clicks.
       </p>
+      <RepoInput />
     </section>
   )
 }
