@@ -121,7 +121,7 @@ export default function RepoStats({ params }: any) {
                         )}
                     </Card>
                     <div>
-                        <Card className="w-full p-7 ml-5 w-56">
+                        <Card className="p-7 ml-5 w-56">
                             <h3 className="text-2xl font-bold mb-7">Languages</h3>
                             {repoInfo && (
                                 <PolarArea data={repoInfo.languages} options={{
