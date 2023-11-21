@@ -295,7 +295,7 @@ export default async function getGitHubInfo(user: string, repo: string): Promise
     let langsCopy = { ...langs };
     let total = Object.values(languages).reduce((a: any, b: any) => {
         return a + b;
-    }, 0);
+    }, 0) as number;
 
     // if langs are less than 30 percent, group them into "other"
     let other = 0;
