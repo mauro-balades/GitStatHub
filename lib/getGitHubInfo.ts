@@ -11,6 +11,7 @@ export interface GitHubInfo {
     contributors: string;
 
     languages: any;
+    langsCopy?: any;
 }
 
 const monthNames = [
@@ -28,7 +29,7 @@ const monthNames = [
     "Dec",
 ];
 
-const langs = {
+export const langs = {
     "ABAP": "#E8274B", 
     "ActionScript": "#882B0F", 
     "Ada": "#02f88c", 
@@ -63,7 +64,7 @@ const langs = {
     "ColdFusion": "#ed2cd6", 
     "Common Lisp": "#3fb68b", 
     "Component Pascal": "#b0ce4e", 
-    "cpp": "#f34b7d", 
+    "C++": "#f34b7d", 
     "Crystal": "#776791", 
     "CSS": "#563d7c", 
     "D": "#ba595e", 
@@ -291,21 +292,33 @@ export default async function getGitHubInfo(user: string, repo: string): Promise
     );
 
     languages = await languages.json();
-    let datasets = [];
-    for (let i = 0; i < Object.keys(languages).length; i++) {
-        let keyIndex = Object.keys(languages)[i];
-        let valueIndex = Object.values(languages)[i];
-        datasets.push({
-            label: keyIndex,
-            data: valueIndex,
-            backgroundColor: langs[keyIndex] || "rgba(0,0,0,0.5)",
-        });
-    }
+    let langsCopy = { ...langs };
+    let total = Object.values(languages).reduce((a: any, b: any) => {
+        return a + b;
+    }, 0);
 
-    console.log(datasets)
+    // if langs are less than 30 percent, group them into "other"
+    let other = 0;
+    Object.keys(languages).forEach((lang: any) => {
+        if ((languages[lang] / total) * 100 < 20) {
+            other += languages[lang];
+            delete languages[lang];
+        }
+    });
+    languages["other"] = other;
+
     let languageChartData = {
         labels: Object.keys(languages),
-        datasets
+        datasets: [
+            {
+                data: Object.values(languages).map((lang: any) => {
+                    return (lang / total) * 100; // percentage
+                }),
+                backgroundColor: Object.keys(languages).map((lang: any) => {
+                    return langs[lang] || "#36A2EB";
+                }),
+            },
+        ],
     };
 
     return {
@@ -318,5 +331,6 @@ export default async function getGitHubInfo(user: string, repo: string): Promise
         contributors: repoInfo.contributors_url,
 
         languages: languageChartData,
+        langsCopy: langsCopy,
     };
 }
