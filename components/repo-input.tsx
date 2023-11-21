@@ -34,7 +34,7 @@ export default function RepoInput() {
     return (
         <>
             <form onSubmit={onSubmit} className="flex w-1/4 mt-5 items-center space-x-2 relative">
-                <Input name="repo" data-aos="fade-up" data-aos-delay="400" className="font-bold" type="text" placeholder="username/repository" />
+                <Input autoFocus name="repo" data-aos="fade-up" data-aos-delay="400" className="font-bold" type="text" placeholder="username/repository" />
                 <Button data-aos="fade-up" data-aos-delay="500" type="submit">Search!</Button>
             </form>
             {error && <span className="mt-2 text-red-500 text-sm">{error}</span>}
