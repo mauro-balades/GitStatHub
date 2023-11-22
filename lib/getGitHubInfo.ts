@@ -8,7 +8,10 @@ export interface GitHubInfo {
     issues: number;
     pullRequests: number;
     subscribers: number;
-    contributors: string;
+    contributors: number;
+    releases: number;
+    branches: number;
+    tags: number;
 
     languages: any;
     langsCopy?: any;
@@ -297,6 +300,35 @@ export default async function getGitHubInfo(user: string, repo: string): Promise
         return a + b;
     }, 0) as number;
 
+    let contributors: any = await fetch(
+        repoInfo.contributors_url
+    );
+    contributors = await contributors.json();
+    contributors = contributors.reduce((r: any, a: any) => {
+        return r + 1;
+    }, 0);
+    let releases: any = await fetch(
+        `https://api.github.com/repos/${user}/${repo}/releases`
+    );
+    releases = await releases.json();
+    releases = releases.reduce((r: any, a: any) => {
+        return r + 1;
+    }, 0);
+    let branches: any = await fetch(
+        `https://api.github.com/repos/${user}/${repo}/branches`
+    );
+    branches = await branches.json();
+    branches = branches.reduce((r: any, a: any) => {
+        return r + 1;
+    }, 0);
+    let tags: any = await fetch(
+        `https://api.github.com/repos/${user}/${repo}/tags`
+    );
+    tags = await tags.json();
+    tags = tags.reduce((r: any, a: any) => {
+        return r + 1;
+    }, 0);
+
     // if langs are less than 30 percent, group them into "other"
     let other = 0;
     Object.keys(languages).forEach((lang: any) => {
@@ -328,7 +360,10 @@ export default async function getGitHubInfo(user: string, repo: string): Promise
         issues: repoInfo.open_issues_count,
         pullRequests: repoInfo.open_issues_count,
         subscribers: repoInfo.subscribers_count,
-        contributors: repoInfo.contributors_url,
+        contributors: contributors,
+        releases,
+        branches,
+        tags,
 
         languages: languageChartData,
         langsCopy: langsCopy,
